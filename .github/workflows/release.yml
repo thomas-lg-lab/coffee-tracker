@@ -1,14 +1,19 @@
 name: Release
 
-# Builds and pushes the production image to GHCR. Publishing from a branch is gated
-# on CI: this runs via workflow_run when the CI workflow succeeds on `main`
-# (=> :latest + :sha-<short>) or on `beta` (=> :beta + :sha-<short>). Version tags v*
-# still trigger directly (=> semver tags), they're cut from main commits that already
+# Builds and pushes the image to GHCR. Merging is not releasing: a branch build is gated
+# on CI and runs via workflow_run when the CI workflow succeeds on `main`
+# (=> :edge + :sha-<short>) or on `beta` (=> :beta + :sha-<short>). Only a version tag v*
+# moves :latest (=> :latest + semver tags); tags are cut from main commits that already
 # passed CI, and the Trivy gate below scans the image again before it's pushed.
 #
+# A tag pushed by a person triggers the `push` event. A release published by
+# draft-release.yml creates its tag with GITHUB_TOKEN, which never starts another
+# workflow, so that job dispatches this one on the tag instead (workflow_dispatch is the
+# one event GITHUB_TOKEN may trigger).
+#
 # The `beta` channel exists so a change can be run on real hardware without ever being
-# offered to anything tracking :latest. Point a container at :beta to opt in; nothing
-# else sees it.
+# offered to anything tracking :latest or :edge. Point a container at :beta to opt in;
+# nothing else sees it.
 on:
   workflow_run:
     workflows: [CI]
@@ -16,6 +21,7 @@ on:
     branches: [main, beta]
   push:
     tags: ['v*']
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -92,7 +98,8 @@ jobs:
           # keeps it below the channel tags so outputs.version stays the channel, which
           # is what the Trivy step scans.
           tags: |
-            type=raw,value=latest,enable=${{ github.event.workflow_run.head_branch == 'main' }}
+            type=raw,value=edge,enable=${{ github.event.workflow_run.head_branch == 'main' }}
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             type=raw,value=beta,enable=${{ github.event.workflow_run.head_branch == 'beta' }}
             type=raw,value=sha-${{ steps.ctx.outputs.short_sha }},priority=100
             type=semver,pattern={{version}}

@@ -206,14 +206,15 @@ sqlite3 /config/coffee.db "UPDATE AppSettings SET LocalLoginEnabled = 1;"
 
 ## Updating
 
-Pull the new `:latest` (or a pinned `:sha-…` / `:vX.Y.Z`) tag in your Docker GUI
+Pull the new `:latest` (or a pinned `:vX.Y.Z` / `:sha-…`) tag in your Docker GUI
 and recreate the container. Volumes persist your data across the update.
 
 ### Release channels
 
 | Tag | Built from | Who gets it |
 |---|---|---|
-| `:latest` | `main`, once CI passes | The default. Nothing else moves it. |
+| `:latest` | the latest published release (`v*` tag) | The default. Only a release moves it. |
+| `:edge` | `main`, once CI passes | Containers that want every merge as it lands. |
 | `:beta` | the `beta` branch, once CI passes | Only containers pinned to `:beta`. |
 | `:vX.Y.Z` | a version tag | Pinned, immutable. |
 | `:sha-…` | any published build | Pinned, immutable; pruned after 30 days. |
