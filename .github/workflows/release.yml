@@ -3,8 +3,9 @@ name: Release
 # Builds and pushes the image to GHCR. Merging is not releasing: a branch build is gated
 # on CI and runs via workflow_run when the CI workflow succeeds on `main`
 # (=> :edge + :sha-<short>) or on `beta` (=> :beta + :sha-<short>). Only a version tag v*
-# moves :latest (=> :latest + semver tags); tags are cut from main commits that already
-# passed CI, and the Trivy gate below scans the image again before it's pushed.
+# moves :latest (=> :latest + semver tags). A tag only publishes if its commit is on main
+# and CI passed on it (checked below, not assumed), and the Trivy gate scans the image
+# again before it's pushed.
 #
 # A tag pushed by a person triggers the `push` event. A release published by
 # draft-release.yml creates its tag with GITHUB_TOKEN, which never starts another
@@ -28,6 +29,7 @@ permissions:
   packages: write
   id-token: write # mint the OIDC token for the build-provenance attestation
   attestations: write # record the attestation against the pushed image
+  actions: read # a tag build checks that CI passed on the tagged commit
 
 # Serialize publishes per channel so rapid pushes can't race on a moving tag. Keyed on
 # the triggering branch, not github.ref: on a workflow_run event that is the default
@@ -68,6 +70,27 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.ref }}
+          # A tag build needs main's history for the ancestry check below.
+          fetch-depth: ${{ startsWith(github.ref, 'refs/tags/v') && 0 || 1 }}
+      # release-drafter tags main's HEAD at publish time, whether or not CI has finished
+      # there, and anyone with write access can push a v* tag on any commit. Nothing
+      # upstream guarantees a release is a commit main has built green, so check it here,
+      # before anything is pushed.
+      - name: Check the tagged commit is on main and passed CI
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+        run: |
+          if ! git merge-base --is-ancestor "$SHA" origin/main; then
+            echo "::error::$GITHUB_REF_NAME ($SHA) is not on main; refusing to publish it as :latest."
+            exit 1
+          fi
+          passed=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --commit "$SHA"             --event push --branch main --status success --json databaseId --jq length)
+          if [ "$passed" -eq 0 ]; then
+            echo "::error::No successful CI run on main for $SHA. Wait for CI, then re-run this workflow on $GITHUB_REF_NAME."
+            exit 1
+          fi
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
@@ -96,12 +119,16 @@ jobs:
           # context, which would label a beta image with the default branch's sha and
           # overwrite the identically-named tag main had already published. priority
           # keeps it below the channel tags so outputs.version stays the channel, which
-          # is what the Trivy step scans.
+          # is what the Trivy step scans. A tag build skips it: main's edge build already
+          # published that sha tag, and re-pushing it from a second, non-reproducible
+          # build would move a tag the README calls immutable.
+          #
+          # No explicit `latest`: the default flavor (latest=auto) adds it for a semver
+          # tag and skips pre-releases, which a raw `latest` on every v* ref did not.
           tags: |
             type=raw,value=edge,enable=${{ github.event.workflow_run.head_branch == 'main' }}
-            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             type=raw,value=beta,enable=${{ github.event.workflow_run.head_branch == 'beta' }}
-            type=raw,value=sha-${{ steps.ctx.outputs.short_sha }},priority=100
+            type=raw,value=sha-${{ steps.ctx.outputs.short_sha }},priority=100,enable=${{ !startsWith(github.ref, 'refs/tags/v') }}
             type=semver,pattern={{version}}
           # Same root cause as the sha tag: metadata-action derives the revision label
           # from the git context, which on a workflow_run event is the default branch.
