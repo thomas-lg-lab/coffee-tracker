@@ -16,6 +16,14 @@
 rapidocr==3.9.2
 onnxruntime==1.30.0
 
+# Transitive (rapidocr -> Pillow, requests -> certifi), pinned because the image's Trivy gate
+# fails on fixable criticals in them: Pillow 12.3 (five heap overflows and an argument
+# injection, fixed in 13.0) and certifi 2026.7.22 (compromised emSign roots). Unpinned, they
+# never moved: this file did not change, so the cached pip layer kept the versions of the
+# first build. Pinned here, they also get the same Renovate updates as the rest.
+pillow==13.0.0
+certifi==2026.10.23
+
 # rapidocr depends on opencv-python, whose GUI build carries ~116 MB of X11 libraries to
 # draw windows a server will never open. The Dockerfile swaps it for this one afterwards;
 # installing this alongside does not help, because pip honours the dependency and ships
