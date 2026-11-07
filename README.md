@@ -1,6 +1,7 @@
 # Coffee Tracker
 
 [![CI](https://github.com/thomas-lg/coffee-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/thomas-lg/coffee-tracker/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/thomas-lg/coffee-tracker/badge)](https://scorecard.dev/viewer/?uri=github.com/thomas-lg/coffee-tracker)
 
 A self-hosted web app to catalog the coffees I buy and rate them to taste, with
 multiple users each keeping their own ratings. Built to be shared, anyone can
