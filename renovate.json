@@ -98,17 +98,17 @@
       "enabled": false
     },
     {
-      "description": "Microsoft.OpenApi 3.x makes IOpenApiMediaType.Example read-only, which the Microsoft.AspNetCore.OpenApi source generator still assigns to (CS0200). Unblocked only by an ASP.NET Core release built against OpenApi 3.x.",
+      "description": "Microsoft.OpenApi 3.x makes IOpenApiMediaType.Example read-only, which the Microsoft.AspNetCore.OpenApi source generator still assigns to (CS0200). Unblocked only by an ASP.NET Core release built against OpenApi 3.x. Listed in the Dependency Dashboard (Pending Approval); tick it to get the PR.",
       "matchPackageNames": [
         "Microsoft.OpenApi"
       ],
       "matchUpdateTypes": [
         "major"
       ],
-      "enabled": false
+      "dependencyDashboardApproval": true
     },
     {
-      "description": "Angular pins TypeScript to a narrow peer range (@angular/build 22 wants >=6.0 <6.1): majors and minors move with an Angular upgrade, patches flow.",
+      "description": "Angular pins TypeScript to a narrow peer range (@angular/build 22 wants >=6.0 <6.1): majors and minors move with an Angular upgrade, patches flow. Listed in the Dependency Dashboard (Pending Approval); tick it to get the PR.",
       "matchManagers": [
         "npm"
       ],
@@ -119,10 +119,10 @@
         "major",
         "minor"
       ],
-      "enabled": false
+      "dependencyDashboardApproval": true
     },
     {
-      "description": "@angular/build's unit-test builder declares peerOptional vitest@^4.0.8 through 22.1.x (#122). Drop this when 22.2 ships stable and move both together.",
+      "description": "@angular/build's unit-test builder declares peerOptional vitest@^4.0.8 through 22.1.x (#122). Drop this when 22.2 ships stable and move both together. Listed in the Dependency Dashboard (Pending Approval); tick it to get the PR.",
       "matchManagers": [
         "npm"
       ],
@@ -132,23 +132,42 @@
       "matchUpdateTypes": [
         "major"
       ],
-      "enabled": false
+      "dependencyDashboardApproval": true
     },
     {
-      "description": "Node's major is pinned by Angular's supported range and must stay in step with ci.yml's node-version and the devcontainer's node feature (#92): moved deliberately, in all places at once.",
-      "matchPackageNames": [
-        "node",
-        "ghcr.io/devcontainers/features/node"
+      "description": "Node is one upgrade across the Dockerfile, the setup-node versions in the workflows, the devcontainer feature and engines in package.json (#92): one PR for all of them, reviewed, and CI checks the whole set. Angular's supported range decides when to merge it.",
+      "matchDepNames": [
+        "node"
       ],
       "matchUpdateTypes": [
         "major"
       ],
+      "groupName": "Node",
+      "enabled": true
+    },
+    {
+      "description": "Within a Node major, only digests move: 24 / 24-slim track the LTS line on purpose, a minor or patch update would only pin them to a full version.",
+      "matchDepNames": [
+        "node"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "enabled": false
     },
     {
-      "description": ".NET majors (SDK, runtime images, the runtime-bound Microsoft.* packages) are a deliberate upgrade, not a weekly bump.",
+      "description": ".NET is one upgrade across global.json, the setup-dotnet versions, the SDK, runtime and devcontainer images and the runtime-bound Microsoft.* packages: one PR for all of them, reviewed.",
+      "matchDepNames": [
+        "dotnet-sdk"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "groupName": ".NET"
+    },
+    {
       "matchPackageNames": [
-        "dotnet-sdk",
         "mcr.microsoft.com/dotnet/**",
         "mcr.microsoft.com/devcontainers/dotnet",
         "Microsoft.AspNetCore.**",
@@ -158,15 +177,27 @@
       "matchUpdateTypes": [
         "major"
       ],
+      "groupName": ".NET"
+    },
+    {
+      "description": "Within a .NET major, the 10.0 image tags, dotnet-version 10.0.x and global.json (rollForward latestFeature) already follow the line; runtime patches arrive through the image digests.",
+      "matchDepNames": [
+        "dotnet-sdk"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "enabled": false
     },
     {
-      "description": "The devcontainer's node feature takes a major only (\"24\"); pinning it to a full version would stop it tracking the LTS line it is meant to follow.",
-      "matchManagers": [
-        "devcontainer"
+      "matchPackageNames": [
+        "mcr.microsoft.com/dotnet/**",
+        "mcr.microsoft.com/devcontainers/dotnet"
       ],
-      "matchDatasources": [
-        "node-version"
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
       ],
       "enabled": false
     }
