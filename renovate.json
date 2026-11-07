@@ -87,13 +87,16 @@
       "groupName": "rapidocr"
     },
     {
-      "description": "engines and packageManager in package.json are not dependency bumps: Dependabot never touched them, Node and npm move with an Angular upgrade.",
+      "description": "The npm engine and packageManager in package.json are not dependency bumps: npm moves with an Angular upgrade. engines.node is not in here: it moves with the Node major (below), and a dependency disabled here could not be re-enabled by a rule that matches an update type, which only applies after lookup.",
       "matchManagers": [
         "npm"
       ],
       "matchDepTypes": [
         "engines",
         "packageManager"
+      ],
+      "matchDepNames": [
+        "npm"
       ],
       "enabled": false
     },
@@ -135,6 +138,29 @@
       "dependencyDashboardApproval": true
     },
     {
+      "description": "Keep the Node references at major precision so they track the LTS line: docker versioning only proposes tags of the same shape (24-slim -> 26-slim), where the node versioning config:recommended applies would pin 26.13.0-slim.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchDepNames": [
+        "node"
+      ],
+      "versioning": "docker"
+    },
+    {
+      "description": "engines.node lists every major Angular supports: a Node major adds to it rather than replacing it.",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchDepTypes": [
+        "engines"
+      ],
+      "matchDepNames": [
+        "node"
+      ],
+      "rangeStrategy": "widen"
+    },
+    {
       "description": "Node is one upgrade across the Dockerfile, the setup-node versions in the workflows, the devcontainer feature and engines in package.json (#92): one PR for all of them, reviewed, and CI checks the whole set. Angular's supported range decides when to merge it.",
       "matchDepNames": [
         "node"
@@ -142,14 +168,14 @@
       "matchUpdateTypes": [
         "major"
       ],
-      "groupName": "Node",
-      "enabled": true
+      "groupName": "Node"
     },
     {
-      "description": "Within a Node major, only digests move: 24 / 24-slim track the LTS line on purpose, a minor or patch update would only pin them to a full version.",
+      "description": "setup-node and the devcontainer feature say 24, which node versioning reads as 24.0.0: a minor would pin it to a full version and stop it tracking the LTS line, so nothing moves while it is a bare major. Once a full version is written (the Node major PR writes one), minor and patch flow again, so it keeps getting Node's security releases.",
       "matchDepNames": [
         "node"
       ],
+      "matchCurrentValue": "/^\\d+$/",
       "matchUpdateTypes": [
         "minor",
         "patch"
@@ -180,7 +206,10 @@
       "groupName": ".NET"
     },
     {
-      "description": "Within a .NET major, the 10.0 image tags, dotnet-version 10.0.x and global.json (rollForward latestFeature) already follow the line; runtime patches arrive through the image digests.",
+      "description": "global.json is a floor, not a pin (rollForward latestFeature): the SDK that builds is whatever setup-dotnet, the SDK image and the devcontainer image carry, so raising the floor on every patch would only churn.",
+      "matchManagers": [
+        "nuget"
+      ],
       "matchDepNames": [
         "dotnet-sdk"
       ],
@@ -191,10 +220,11 @@
       "enabled": false
     },
     {
-      "matchPackageNames": [
-        "mcr.microsoft.com/dotnet/**",
-        "mcr.microsoft.com/devcontainers/dotnet"
+      "description": "setup-dotnet's 10.0.x already follows the line; a patch would pin it to one SDK. Once a full version is written (the .NET major PR writes one), minor and patch flow again.",
+      "matchDepNames": [
+        "dotnet-sdk"
       ],
+      "matchCurrentValue": "/\\.x$/",
       "matchUpdateTypes": [
         "minor",
         "patch"
