@@ -7,7 +7,7 @@ me, so a vulnerability here can affect someone else's home network. Reports are 
 
 **Please don't open a public issue.** Use GitHub's private vulnerability reporting:
 
-→ **[Report a vulnerability](https://github.com/thomas-lg/coffee-tracker/security/advisories/new)**
+→ **[Report a vulnerability](https://github.com/thomas-lg-lab/coffee-tracker/security/advisories/new)**
 
 That opens a private advisory only you and I can see, so a fix can ship before the
 details are public.

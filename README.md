@@ -1,7 +1,7 @@
 # Coffee Tracker
 
-[![CI](https://github.com/thomas-lg/coffee-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/thomas-lg/coffee-tracker/actions/workflows/ci.yml)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/thomas-lg/coffee-tracker/badge)](https://scorecard.dev/viewer/?uri=github.com/thomas-lg/coffee-tracker)
+[![CI](https://github.com/thomas-lg-lab/coffee-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/thomas-lg-lab/coffee-tracker/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/thomas-lg-lab/coffee-tracker/badge)](https://scorecard.dev/viewer/?uri=github.com/thomas-lg-lab/coffee-tracker)
 
 A self-hosted web app to catalog the coffees I buy and rate them to taste, with
 multiple users each keeping their own ratings. Built to be shared, anyone can
@@ -108,7 +108,7 @@ in-process, with real discovery, JWKS, PKCE and nonce, so no external provider i
 
 ## Install on Unraid (or any Docker host)
 
-The published image is public at `ghcr.io/thomas-lg/coffee-tracker`. On Unraid,
+The published image is public at `ghcr.io/thomas-lg-lab/coffee-tracker`. On Unraid,
 add the container from [`deploy/unraid/my-coffee-tracker.xml`](./deploy/unraid/my-coffee-tracker.xml)
 (or fill in the values below by hand), map the volumes, set the required env vars,
 and **put it behind a reverse proxy that terminates HTTPS** (NPM, SWAG, Traefik,

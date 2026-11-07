@@ -40,7 +40,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  IMAGE: ghcr.io/thomas-lg/coffee-tracker
+  IMAGE: ghcr.io/thomas-lg-lab/coffee-tracker
 
 jobs:
   image:
@@ -175,7 +175,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       # Signed proof of where/how the image was built, verifiable with
-      # `gh attestation verify oci://ghcr.io/thomas-lg/coffee-tracker:<tag>`.
+      # `gh attestation verify oci://ghcr.io/thomas-lg-lab/coffee-tracker:<tag>`.
       - name: Attest build provenance
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
         with:

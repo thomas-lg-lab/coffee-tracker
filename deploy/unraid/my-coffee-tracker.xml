@@ -10,15 +10,15 @@
 -->
 <Container version="2">
   <Name>coffee-tracker</Name>
-  <Repository>ghcr.io/thomas-lg/coffee-tracker:latest</Repository>
-  <Registry>https://github.com/thomas-lg/coffee-tracker/pkgs/container/coffee-tracker</Registry>
+  <Repository>ghcr.io/thomas-lg-lab/coffee-tracker:latest</Repository>
+  <Registry>https://github.com/thomas-lg-lab/coffee-tracker/pkgs/container/coffee-tracker</Registry>
   <Network>bridge</Network>
   <MyIP/>
   <Shell>sh</Shell>
   <Privileged>false</Privileged>
-  <Support>https://github.com/thomas-lg/coffee-tracker/issues</Support>
-  <Project>https://github.com/thomas-lg/coffee-tracker</Project>
-  <ReadMe>https://github.com/thomas-lg/coffee-tracker/blob/main/README.md</ReadMe>
+  <Support>https://github.com/thomas-lg-lab/coffee-tracker/issues</Support>
+  <Project>https://github.com/thomas-lg-lab/coffee-tracker</Project>
+  <ReadMe>https://github.com/thomas-lg-lab/coffee-tracker/blob/main/README.md</ReadMe>
   <Overview>
     Self-hosted coffee catalog: rate coffees over time, snap a bag photo to
     auto-fill the form (OCR), multi-user. Serves the Angular PWA and the API
@@ -27,7 +27,7 @@
   <Category>Tools: Productivity:</Category>
   <WebUI>http://[IP]:[PORT:8080]/</WebUI>
   <TemplateURL/>
-  <Icon>https://raw.githubusercontent.com/thomas-lg/coffee-tracker/main/frontend/packages/app/public/icons/icon-192x192.png</Icon>
+  <Icon>https://raw.githubusercontent.com/thomas-lg-lab/coffee-tracker/main/frontend/packages/app/public/icons/icon-192x192.png</Icon>
   <ExtraParams/>
   <PostArgs/>
   <CPUset/>
