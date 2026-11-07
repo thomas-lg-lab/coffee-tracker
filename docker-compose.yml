@@ -3,7 +3,7 @@
 services:
   coffee-tracker:
     build: .
-    image: ghcr.io/thomas-lg/coffee-tracker:local
+    image: ghcr.io/thomas-lg-lab/coffee-tracker:local
     ports:
       # Dev-only compose, bind to localhost so the app isn't exposed on the LAN.
       - '127.0.0.1:8080:8080'

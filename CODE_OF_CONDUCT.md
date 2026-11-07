@@ -14,7 +14,7 @@ is being discussed.
 ## If something goes wrong
 
 Report it privately through
-[a GitHub private vulnerability report](https://github.com/thomas-lg/coffee-tracker/security/advisories/new),
+[a GitHub private vulnerability report](https://github.com/thomas-lg-lab/coffee-tracker/security/advisories/new),
 it's the only private channel this repo has, and it works for conduct as well as
 bugs. I read them.
 

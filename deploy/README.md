@@ -4,7 +4,7 @@ How Coffee Tracker ships and runs in production. The model is **GitHub Actions �
 GHCR (public image) → manual install via the Unraid Docker GUI**, no Watchtower,
 SSH, or compose-on-NAS. Images cover `linux/amd64` and `linux/arm64`.
 
-Canonical image: `ghcr.io/thomas-lg/coffee-tracker` (tags: `latest`, `sha-<short>`,
+Canonical image: `ghcr.io/thomas-lg-lab/coffee-tracker` (tags: `latest`, `sha-<short>`,
 and `X.Y.Z`, without the `v`, on releases).
 
 ---
@@ -14,13 +14,13 @@ and `X.Y.Z`, without the `v`, on releases).
 So the NAS can pull without authenticating. There is no REST API for this, do it in
 the web UI:
 
-1. Go to the package: **https://github.com/users/thomas-lg/packages/container/package/coffee-tracker**
+1. Go to the package: **https://github.com/orgs/thomas-lg-lab/packages/container/package/coffee-tracker**
 2. **Package settings** → **Danger Zone** → **Change visibility** → **Public**.
 
 Verify from any Docker host (no login):
 
 ```bash
-docker pull ghcr.io/thomas-lg/coffee-tracker:latest
+docker pull ghcr.io/thomas-lg-lab/coffee-tracker:latest
 ```
 
 ---
@@ -42,7 +42,7 @@ Configured via the API. Current ruleset:
 View or edit at **Settings → Branches → Branch protection rules**, or via:
 
 ```bash
-gh api repos/thomas-lg/coffee-tracker/branches/main/protection   # if gh is installed
+gh api repos/thomas-lg-lab/coffee-tracker/branches/main/protection   # if gh is installed
 ```
 
 > Requires a public repo or GitHub Pro to stay enabled (this repo is public).

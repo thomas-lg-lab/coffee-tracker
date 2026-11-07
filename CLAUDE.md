@@ -261,7 +261,7 @@ with **NU1004**. Refresh them all:
 The script uses a local .NET SDK if there is one and the pinned SDK container
 otherwise, so it works on a bare host.
 
-Dependency PRs come from Renovate (shared config in `thomas-lg/renovate-config`, this
+Dependency PRs come from Renovate (shared config in `thomas-lg-lab/renovate-config`, this
 repository's rules in `renovate.json`), which runs `dotnet restore --force-evaluate` on
 every project that depends on a changed `.csproj` and commits all their lock files. The
 script is for changes made by hand. Dependabot only refreshed the lock file of the
