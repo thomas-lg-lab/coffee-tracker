@@ -10,7 +10,7 @@
 # feature. 24 is the current LTS. Majors are pinned deliberately, not by parity: the gate
 # is frontend/package.json's engines (^20.19 || ^22.12 || ^24, i.e. Angular's supported
 # range) plus LTS status -- an even major is still "Current" until the October of its
-# release year. Dependabot ignores node majors here; move all three references at once.
+# release year. Renovate ignores node majors here; move all three references at once.
 FROM --platform=$BUILDPLATFORM node:24-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 AS web
 WORKDIR /web
 # Restore deps in their own layer (cached until a manifest changes). This is an npm

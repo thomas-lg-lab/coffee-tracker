@@ -7,14 +7,15 @@
     with --locked-mode (see .github/workflows/ci.yml) so a dependency bump cannot land
     without a reviewed lock file. NuGet writes one lock file per project, so bumping a
     package in Application or Infrastructure also invalidates the lock files of Api and
-    Tests, which reference them transitively. Dependabot only refreshes the lock file of
-    the project whose .csproj it edited, so its PRs fail with:
+    Tests, which reference them transitively. A bump that only refreshes the lock file of
+    the project whose .csproj it edited fails with:
 
         error NU1004: The project references coffeetracker.infrastructure whose
         dependencies has changed. The packages lock file is inconsistent with the
         project dependencies so restore can't be run in locked mode.
 
-    This script is the fix: a solution-wide `dotnet restore --force-evaluate`, which
+    Renovate restores every dependent project on its own PRs, so this is for changes made
+    by hand: a solution-wide `dotnet restore --force-evaluate`, which
     re-resolves every graph and rewrites every lock file. It runs natively when a .NET
     SDK is on PATH, and otherwise inside the same SDK container image the Dockerfile
     uses, so it works on a host with no SDK installed as well as in the dev container.
@@ -47,7 +48,7 @@ $solution = 'CoffeeTracker.sln'
 $restoreArgs = if ($Check) { '--locked-mode' } else { '--force-evaluate' }
 
 # Read the SDK image straight out of ./Dockerfile rather than repeating the digest here.
-# Dependabot bumps that digest regularly, so a copy in this file would silently go stale
+# Renovate bumps that digest regularly, so a copy in this file would silently go stale
 # and start resolving against a different SDK (and a different bundled NuGet) than the
 # image builds with -- which is exactly the class of drift this script exists to prevent.
 function Get-SdkImage {

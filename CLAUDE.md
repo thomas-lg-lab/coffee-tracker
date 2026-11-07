@@ -261,18 +261,11 @@ with **NU1004**. Refresh them all:
 The script uses a local .NET SDK if there is one and the pinned SDK container
 otherwise, so it works on a bare host.
 
-Dependabot hits this on every backend PR. Without a local toolchain,
-`gh workflow run refresh-lockfiles.yml -f pr=<number>` does the restore and pushes the
-lock files, but it cannot make the checks pass on its own: GitHub parks any run
-triggered by `github-actions[bot]` as `action_required`, and `GITHUB_TOKEN` can neither
-start nor approve its own runs. The job summary prints the one command that finishes it:
-
-```bash
-gh pr close <number> && gh pr reopen <number>
-```
-
-That workflow refuses a pull request from a fork by design: it checks out the head it
-is given with a writable token.
+Dependency PRs come from Renovate (shared config in `thomas-lg/renovate-config`, this
+repository's rules in `renovate.json`), which runs `dotnet restore --force-evaluate` on
+every project that depends on a changed `.csproj` and commits all their lock files. The
+script is for changes made by hand. Dependabot only refreshed the lock file of the
+project it edited, which is what the former `refresh-lockfiles.yml` workflow patched.
 
 ## OpenSpec
 
