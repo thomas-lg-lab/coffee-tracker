@@ -58,7 +58,7 @@ Instances may be internet-exposed and shared, so:
 - Every response carries a content security policy with no inline script, plus
   `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer` and `nosniff`.
 - The container runs as a non-root user; only `/config` and `/photos` are writable.
-- Dependabot covers all seven ecosystems, and CI runs CodeQL plus a Trivy image scan that
+- Renovate (shared config in thomas-lg/renovate-config) covers all seven ecosystems, and CI runs CodeQL plus a Trivy image scan that
   hard-gates on fixable criticals.
 
 ## Conventions
