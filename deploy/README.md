@@ -5,7 +5,7 @@ GHCR (public image) → manual install via the Unraid Docker GUI**, no Watchtowe
 SSH, or compose-on-NAS. Images cover `linux/amd64` and `linux/arm64`.
 
 Canonical image: `ghcr.io/thomas-lg/coffee-tracker` (tags: `latest`, `sha-<short>`,
-and `vX.Y.Z` on version tags).
+and `X.Y.Z`, without the `v`, on releases).
 
 ---
 
@@ -104,7 +104,7 @@ setting if the deployment sits behind forward auth.
 
 ### Updating
 
-Pull a newer tag (`:latest` or a pinned `:sha-…` / `:vX.Y.Z`) and recreate the
+Pull a newer tag (`:latest` or a pinned `:sha-…` / `:X.Y.Z`) and recreate the
 container. **Back up `/config` + `/photos` first**, startup auto-applies EF
 migrations with no rollback. In WAL mode `/config` holds three files; for a
 consistent single-file snapshot use `sqlite3 coffee.db ".backup backup.db"`.

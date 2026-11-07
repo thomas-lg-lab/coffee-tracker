@@ -18,10 +18,10 @@ on:
           - "false"
           - "true"
 
+# Each job asks for what it writes; the draft job runs on every push to main and has no
+# business dispatching workflows.
 permissions:
-  contents: write
-  pull-requests: read
-  actions: write # dispatch release.yml on the tag a publish creates
+  contents: read
 
 # Rapid pushes to main both rewrite the same draft release, queue them instead
 # of letting two drafter runs race (no cancel: a publish run must never be killed
@@ -34,6 +34,9 @@ jobs:
   draft-release:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
+    permissions:
+      contents: write # rewrite the draft release
+      pull-requests: read
     steps:
       - name: Create/Update Draft Release
         uses: release-drafter/release-drafter@978bb0b30c5ee8cdd332ced253758157150d43f0 # v7
@@ -44,6 +47,10 @@ jobs:
   publish-release:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write # publish the release, which creates its tag
+      pull-requests: read
+      actions: write # dispatch release.yml on that tag
     steps:
       - name: Publish Release
         uses: release-drafter/release-drafter@978bb0b30c5ee8cdd332ced253758157150d43f0 # v7
