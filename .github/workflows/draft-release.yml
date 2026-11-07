@@ -21,6 +21,7 @@ on:
 permissions:
   contents: write
   pull-requests: read
+  actions: write # dispatch release.yml on the tag a publish creates
 
 # Rapid pushes to main both rewrite the same draft release, queue them instead
 # of letting two drafter runs race (no cancel: a publish run must never be killed
@@ -50,3 +51,12 @@ jobs:
           config-name: release-drafter.yml
           publish: ${{ github.event.inputs.dry_run == 'false' }}
           token: ${{ secrets.GITHUB_TOKEN }}
+        id: drafter
+      # The tag this publish created was pushed with GITHUB_TOKEN, which starts no
+      # workflow, so release.yml would never see it. Dispatch it on the tag instead.
+      - name: Build and push the release image
+        if: github.event.inputs.dry_run == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.drafter.outputs.tag_name }}
+        run: gh workflow run release.yml --repo "$GITHUB_REPOSITORY" --ref "$TAG"
