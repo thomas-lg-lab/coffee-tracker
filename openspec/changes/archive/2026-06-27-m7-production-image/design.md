@@ -16,7 +16,7 @@ the dev experience (Swagger at `/`, `ng serve` on 4200) is unchanged.
 
 ## 3. HSTS, not HTTPS redirection
 
-TLS is terminated at the NAS reverse proxy (SWAG/etc.); the container speaks plain
+TLS is terminated at the reverse proxy in front of the app; the container speaks plain
 HTTP on 8080. We emit **HSTS** in prod but deliberately do **not** call
 `UseHttpsRedirection` (the container has no HTTPS listener; redirecting would loop).
 `UseForwardedHeaders` (already configured) honors `X-Forwarded-Proto` so the app
@@ -40,7 +40,7 @@ image (unlike the macOS host, which uses `none`).
 ## 6. compose is local-only
 
 `docker-compose.yml` exists for local build/test and as documentation of the env +
-volumes. The NAS runs the published GHCR image via the Unraid Docker GUI (M8) — not
+volumes. An Unraid install runs the published GHCR image via the Docker GUI (M8) — not
 this compose file.
 
 ## 7. Verification is CI-side

@@ -71,9 +71,8 @@ Run against a **copy** of a database that predates this change, never the live o
 
 ## Phase 6 — A real provider, end to end
 
-Needs an OIDC client registered at a real provider. Authelia on the NAS is the obvious
-candidate, and registering a client there is a change to live infrastructure — **to be
-agreed before touching it.**
+Needs an OIDC client registered at a real provider. Registering a client on a live
+provider is a change to live infrastructure — **to be agreed before touching it.**
 
 | # | Step | Expected |
 |---|---|---|
