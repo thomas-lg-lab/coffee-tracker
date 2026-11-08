@@ -9,7 +9,7 @@
 # each other either.
 #
 # `rapidocr`, not `rapidocr-onnxruntime`: the latter is the same project's earlier name,
-# frozen since January 2025 on PP-OCRv4. See CLAUDE.md § OCR.
+# frozen since January 2025 on PP-OCRv4. See AGENTS.md § OCR.
 #
 # To bump: change a version here, rebuild, and run the benchmark. A score that moves is
 # the point of doing it that way round.

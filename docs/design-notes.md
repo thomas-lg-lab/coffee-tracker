@@ -2,7 +2,7 @@
 
 Standing rationale for Coffee Tracker, the decisions that shaped the app and still
 govern it. For *what it does* and how to run it see [the README](../README.md); for
-conventions when changing the code see [CLAUDE.md](../CLAUDE.md); for live behaviour
+conventions when changing the code see [AGENTS.md](../AGENTS.md); for live behaviour
 specs see [`openspec/specs/`](../openspec/specs/); for how each piece was built see the
 archived changes in [`openspec/changes/archive/`](../openspec/changes/archive/).
 
@@ -28,7 +28,7 @@ path. Images are published as a manifest list covering `linux/amd64` and
   denormalized string column, the correct model, and better EF Core practice.
 - The OCR engine sits behind `IOcrService` so it can be swapped for PaddleOCR or
   RapidOCR without the application layer noticing. The shipped adapter shells out to the
-  `tesseract` CLI rather than binding a native library; [CLAUDE.md](../CLAUDE.md) § OCR
+  `tesseract` CLI rather than binding a native library; [AGENTS.md](../AGENTS.md) § OCR
   says why the P/Invoke route was abandoned.
 - **The first account registered becomes administrator.** A fresh instance accepts
   exactly one registration and then closes itself, so an internet-exposed instance is
@@ -67,7 +67,7 @@ Instances may be internet-exposed and shared, so:
 - Dev config lives in `appsettings`, production config in environment variables. Real
   keys are never committed, `.env` is gitignored for exactly this reason.
 - **Comments explain why, not what.** It is the rule this codebase is most deliberate
-  about; see [CLAUDE.md](../CLAUDE.md) § Comment style.
+  about; see [AGENTS.md](../AGENTS.md) § Comment style.
 - Feature branch → PR → CI green → squash-merge. Linear history, no merge commits.
 
 ## Backups

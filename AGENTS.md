@@ -73,6 +73,10 @@ restating rather than explaining, and worth a second look.
 - Feature branch → PR → CI green → **squash-merge**. `main` is protected.
 - PR titles follow **Conventional Commits**; `.github/workflows/pr-title-check.yml`
   enforces it against `.github/conventional-commit-types.json`.
+- Issues and PR descriptions follow the organisation's defaults in `thomas-lg-lab/.github`
+  (issue forms, PR template, and how to fill them in its README); they are not in this repository.
+  An issue opened through the API or `gh` skips the forms: use the same sections and set the issue
+  type (`gh api repos/OWNER/REPO/issues -f title=... -f body=... -f type=Task`, or `Bug`, `Feature`).
 - Commit with your personal (not work) git identity; check `git config user.email`
   in this clone before the first commit.
 - `GH_TOKEN` in this environment lacks the `workflow` scope, so for any PR touching

@@ -1,7 +1,7 @@
 // Captures the README screenshots against a running instance, so they can be
 // regenerated when the UI moves instead of being stale hand-grabs nobody dares touch.
 //
-// Needs a running, seeded instance; see "Regenerating the screenshots" in CLAUDE.md.
+// Needs a running, seeded instance; see "Regenerating the screenshots" in AGENTS.md.
 //   BASE_URL=http://localhost:8080 node scripts/capture-screenshots.mjs
 //
 // It signs in through the API once and seeds the session into localStorage the way the

@@ -18,7 +18,7 @@ don't need that; just send them.
 
 ## Working on the code
 
-**Read [CLAUDE.md](CLAUDE.md) first.** It's the real contributor guide: the
+**Read [AGENTS.md](AGENTS.md) first.** It's the real contributor guide: the
 architecture rules, the comment style this codebase is deliberate about, and the
 hard-won gotchas, including the NuGet lock-file trap that bites every backend
 dependency bump.
