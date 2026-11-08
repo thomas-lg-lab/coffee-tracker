@@ -1,1 +1,3 @@
-* @thomas-lg
+# Only the CI, the rulesets and this file need my review (ruleset "Code owner review"):
+# the required checks run from .github/, so a change there must not merge on a green CI alone.
+/.github/ @thomas-lg
