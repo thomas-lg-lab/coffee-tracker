@@ -69,8 +69,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.ref }}
-          # A tag build needs main's history for the ancestry check below.
-          fetch-depth: ${{ startsWith(github.ref, 'refs/tags/v') && 0 || 1 }}
+          # A tag build needs main's history for the ancestry check below. The values are
+          # strings: a bare 0 is falsy, so `cond && 0 || 1` always gave a shallow clone.
+          fetch-depth: ${{ startsWith(github.ref, 'refs/tags/v') && '0' || '1' }}
       # release-drafter tags main's HEAD at publish time, whether or not CI has finished
       # there, and anyone with write access can push a v* tag on any commit. Nothing
       # upstream guarantees a release is a commit main has built green, so check it here,
