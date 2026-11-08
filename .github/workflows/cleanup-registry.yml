@@ -1,7 +1,7 @@
-# release.yml pushes a `sha-<short>` tag on every main push (plus `latest`) and an
+# release.yml pushes a `sha-<short>` tag on every main push (plus `edge`) and an
 # attestation referrer per image, so sha-tagged images and their referrers pile up
 # in GHCR. Prune weekly with an attestation-aware action: keep the 10 most recent
-# sha-* (delete the rest older than 30d), never touch `latest` or `beta` (both are
+# sha-* (delete the rest older than 30d), never touch `latest` or `edge` (both are
 # channels someone's container may be pinned to), and delete untagged
 # layers, while preserving the build-provenance/cosign referrers of images we keep
 # (dataaxiom only removes a referrer when its parent image is deleted).
@@ -38,7 +38,7 @@ jobs:
           packages: coffee-tracker
           delete-tags: sha-*
           keep-n-tagged: 10
-          exclude-tags: latest,beta
+          exclude-tags: latest,edge
           delete-untagged: true
           older-than: 30 days
           dry-run: ${{ github.event.inputs.dry-run == 'true' }}

@@ -2,7 +2,7 @@ name: Release
 
 # Builds and pushes the image to GHCR. Merging is not releasing: a branch build is gated
 # on CI and runs via workflow_run when the CI workflow succeeds on `main`
-# (=> :edge + :sha-<short>) or on `beta` (=> :beta + :sha-<short>). Only a version tag v*
+# (=> :edge + :sha-<short>). Only a version tag v*
 # moves :latest (=> :latest + semver tags). A tag only publishes if its commit is on main
 # and CI passed on it (checked below, not assumed), and the Trivy gate scans the image
 # again before it's pushed.
@@ -12,14 +12,14 @@ name: Release
 # workflow, so that job dispatches this one on the tag instead (workflow_dispatch is the
 # one event GITHUB_TOKEN may trigger).
 #
-# The `beta` channel exists so a change can be run on real hardware without ever being
-# offered to anything tracking :latest or :edge. Point a container at :beta to opt in;
-# nothing else sees it.
+# `edge` is the channel to try a change on real hardware before a release: nothing in
+# production tracks it. A change not merged yet is tried from its PR's CI build instead.
+# (The former `beta` branch and channel were dropped on 8 November 2026, trunk-based.)
 on:
   workflow_run:
     workflows: [CI]
     types: [completed]
-    branches: [main, beta]
+    branches: [main]
   push:
     tags: ['v*']
   workflow_dispatch:
@@ -33,7 +33,7 @@ permissions:
 
 # Serialize publishes per channel so rapid pushes can't race on a moving tag. Keyed on
 # the triggering branch, not github.ref: on a workflow_run event that is the default
-# branch whatever built, so main and beta would otherwise share one queue. No
+# branch whatever built. No
 # cancel-in-progress: killing a run mid-push could leave a tag without its attestation.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.workflow_run.head_branch || github.ref }}
@@ -49,24 +49,23 @@ jobs:
     # require that its commit is still the tip (a superseding push gets its own CI run
     # and release, so a stale run publishing an old sha would only churn :latest).
     # github.sha is the default branch's head on a workflow_run event, which is exactly
-    # what that comparison needs and why it cannot be applied to beta. Tags: publish.
+    # what that comparison needs. Tags: publish.
     #
     # The event/repository pair is load-bearing, not belt-and-braces: ci.yml runs on
     # pull_request, so it runs for fork PRs too, and `head_branch` is then the branch name
-    # *inside the fork*, anyone naming theirs `beta` would otherwise have their unmerged
+    # *inside the fork*, anyone naming theirs `main` would otherwise have their unmerged
     # head published. `event == 'push'` is the strong half.
     if: >-
       (github.event_name == 'workflow_run'
         && github.event.workflow_run.conclusion == 'success'
         && github.event.workflow_run.event == 'push'
         && github.event.workflow_run.head_repository.full_name == github.repository
-        && (github.event.workflow_run.head_branch == 'beta'
-            || github.event.workflow_run.head_sha == github.sha))
+        && github.event.workflow_run.head_sha == github.sha)
       || startsWith(github.ref, 'refs/tags/v')
     steps:
       # On a workflow_run event GITHUB_SHA and GITHUB_REF point at the DEFAULT branch,
-      # not at the branch whose CI just passed. Checking out the default would build
-      # main's code and publish it under :beta, so take the head sha explicitly.
+      # not at the commit whose CI just passed. Checking out the default would build
+      # whatever main's tip is now, so take the head sha explicitly.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.ref }}
@@ -116,8 +115,7 @@ jobs:
           #
           # The sha tag is raw, not type=sha: type=sha has no `value` attribute, so
           # passing one is silently ignored and the tag is computed from the git
-          # context, which would label a beta image with the default branch's sha and
-          # overwrite the identically-named tag main had already published. priority
+          # context, which can name a different commit than the one checked out. priority
           # keeps it below the channel tags so outputs.version stays the channel, which
           # is what the Trivy step scans. A tag build skips it: main's edge build already
           # published that sha tag, and re-pushing it from a second, non-reproducible
@@ -127,7 +125,6 @@ jobs:
           # tag and skips pre-releases, which a raw `latest` on every v* ref did not.
           tags: |
             type=raw,value=edge,enable=${{ github.event.workflow_run.head_branch == 'main' }}
-            type=raw,value=beta,enable=${{ github.event.workflow_run.head_branch == 'beta' }}
             type=raw,value=sha-${{ steps.ctx.outputs.short_sha }},priority=100,enable=${{ !startsWith(github.ref, 'refs/tags/v') }}
             type=semver,pattern={{version}}
           # Same root cause as the sha tag: metadata-action derives the revision label
