@@ -14,7 +14,7 @@ namespace CoffeeTracker.Infrastructure.Ocr;
 /// Measured over the benchmark's nine real bags, Tesseract returned "lam" where the
 /// label reads "LA LIBERTAD", "INA\" for "L'Original", and nothing at all for "INTENSO
 /// BLEND"; RapidOCR reads all three, plus a script-font logo Tesseract never saw. See
-/// CLAUDE.md § OCR for the scorecard.
+/// AGENTS.md § OCR for the scorecard.
 ///
 /// Like the Tesseract adapter it shells out to a process and pipes the image over
 /// **stdin**, so no caller-controlled value becomes a path or an argument. RapidOCR's own

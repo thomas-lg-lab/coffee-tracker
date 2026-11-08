@@ -74,7 +74,7 @@ Docker and the VS Code Dev Containers extension.
    `http://localhost:4200` (both forwarded automatically). `http://localhost` is a
    secure context, so the PWA service worker and camera work without HTTPS in dev.
 
-Conventions, architecture rules and maintainer notes live in [CLAUDE.md](./CLAUDE.md),
+Conventions, architecture rules and maintainer notes live in [AGENTS.md](./AGENTS.md),
 including the NuGet lock-file trap that bites every backend dependency bump.
 
 ## Running the tests
@@ -262,7 +262,7 @@ Nothing committed, just a parking lot for when the mood strikes:
 ## Contributing
 
 Bug reports and questions are welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md) for
-how the repo works, and [CLAUDE.md](./CLAUDE.md) for the architecture rules and the
+how the repo works, and [AGENTS.md](./AGENTS.md) for the architecture rules and the
 gotchas worth knowing before changing anything.
 
 Found a security problem? Please report it privately rather than in an issue.

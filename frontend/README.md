@@ -4,7 +4,7 @@ Angular 22 PWA (standalone components, signals, Signal Forms, Tailwind), split i
 npm workspace packages under `packages/`.
 
 Everything you need is in the repo root. [README.md](../README.md) covers what the app
-does and how to run it, [CLAUDE.md](../CLAUDE.md) has the architecture rules and the
+does and how to run it, [AGENTS.md](../AGENTS.md) has the architecture rules and the
 gotchas, and [CONTRIBUTING.md](../CONTRIBUTING.md) explains how to send a change.
 
 ```bash

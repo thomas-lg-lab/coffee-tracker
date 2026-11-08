@@ -181,7 +181,7 @@ public static class OcrFixtures
 /// <summary>
 /// A <see cref="FactAttribute"/> for one engine's benchmark, skipped with a reason when
 /// that engine is absent, which is the bare Windows host this repo is often driven from
-/// (CLAUDE.md § Gotchas). Skipped rather than quietly passing: a benchmark that reports
+/// (AGENTS.md § Gotchas). Skipped rather than quietly passing: a benchmark that reports
 /// green having measured nothing is worse than one that says it did not run.
 /// </summary>
 public sealed class OcrBenchmarkFactAttribute : FactAttribute
