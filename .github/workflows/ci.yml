@@ -1,23 +1,26 @@
 name: CI
 
-# Runs on every PR and on pushes to main. Validates backend + frontend + the
-# production Docker build. It does NOT push images; release.yml does that, and it gates
-# every branch publish on this workflow succeeding.
+# Runs on every PR, on pushes to main and on release tags: backend, frontend and e2e, then the
+# image through the organisation's shared workflow (thomas-lg-lab/.github), which builds and
+# gates it on PRs, publishes :edge and :sha-<short> from main, and :X.Y.Z / :latest from a
+# release tag. Nothing is published that did not pass the checks of the same run.
 on:
   pull_request:
   push:
     branches: [main]
+    tags: ["v*"]
+  # release-drafter.yml dispatches this workflow on the tag a published release creates.
+  workflow_dispatch:
 
-# Least privilege: these jobs only read the repo (no image push here).
+# Least privilege: the check jobs only read the repo; the image job asks for its own.
 permissions:
   contents: read
 
-# A newer push to the same PR (or to main) cancels the in-flight run. The Docker
-# build job is the expensive one to waste. Keyed by ref, so each PR and main are
-# independent groups; ci.yml never publishes, so cancelling a main run is safe.
+# A newer push to a PR cancels its run. main and tags never cancel: their run publishes, and
+# killing it mid-push could leave a tag without its attestation.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   backend:
@@ -182,78 +185,19 @@ jobs:
           path: frontend/playwright-report/
           retention-days: 7
 
-  # The image ships for arm64 too, so a PR that breaks that build has to fail here rather
-  # than at release. Its own job on a native arm64 runner, not a second step on the amd64
-  # one: built under QEMU it took 366 seconds against 116 for amd64, three quarters of the
-  # whole job, and emulating a pip install of onnxruntime and numpy is most of that. Free
-  # for public repositories. It is also not scanned, because both images install the same
-  # packages from the same base and scanning one covers the CVEs of both.
-  docker-build-arm64:
-    runs-on: ubuntu-24.04-arm
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
-      - name: Verify the arm64 image builds
-        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
-        with:
-          context: .
-          platforms: linux/arm64
-          push: false
-          # A separate cache scope: sharing one with the amd64 job would have each
-          # eviction take the other's layers with it.
-          cache-from: type=gha,scope=arm64
-          cache-to: type=gha,mode=max,scope=arm64
-
-  docker-build:
-    runs-on: ubuntu-latest
-    # Job-level permissions REPLACE the top-level set, so re-state contents: read
-    # alongside the security-events: write needed to upload the Trivy scan.
+  # The image, once the three suites passed. verify-arm64: the image ships for arm64 too, so a
+  # PR that breaks that build has to fail here rather than at release; the shared workflow
+  # builds it on a native arm64 runner (under QEMU it took 366 seconds against 116 for amd64,
+  # emulating a pip install of onnxruntime and numpy). Not scanned: both images install the
+  # same packages from the same base, so scanning amd64 covers the CVEs of both.
+  image:
+    needs: [backend, frontend, e2e]
     permissions:
       contents: read
       security-events: write
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
-      # Build amd64 and load it into the local daemon so Trivy scans the exact image.
-      # Only one platform can be loaded, which is why the arm64 build is a separate step
-      # below rather than a second entry here.
-      - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
-        with:
-          context: .
-          platforms: linux/amd64
-          push: false
-          load: true
-          tags: coffee-tracker:ci
-          # Persist the layer cache between runs. Both restore layers (npm in stage 1,
-          # NuGet in stage 2) are keyed on manifests, so a PR that only touches source
-          # code reuses them instead of re-downloading both dependency graphs.
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      # Report CRITICAL+HIGH CVEs to the Security tab (SARIF), non-blocking: base-image
-      # HIGHs come and go with Trivy's vuln DB and are outside our control, so they must
-      # not flake PRs. The hard gate below blocks only on a fixable CRITICAL.
-      - name: Scan image for vulnerabilities (Trivy, report)
-        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
-        with:
-          image-ref: coffee-tracker:ci
-          format: sarif
-          output: trivy-results.sarif
-          severity: CRITICAL,HIGH
-          ignore-unfixed: true
-      - name: Upload Trivy results to code scanning
-        if: always()
-        uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4
-        with:
-          sarif_file: trivy-results.sarif
-          category: trivy-image
-      # Hard gate: fail only on a FIXABLE CRITICAL vulnerability (vuln scanner only, so a
-      # false-positive secret match can't block). Reuses the Trivy DB cached above.
-      - name: Fail on fixable CRITICAL vulnerabilities (Trivy, gate)
-        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
-        with:
-          image-ref: coffee-tracker:ci
-          scanners: vuln
-          format: table
-          exit-code: '1'
-          severity: CRITICAL
-          ignore-unfixed: true
+      packages: write
+      id-token: write
+      attestations: write
+    uses: thomas-lg-lab/.github/.github/workflows/container-image.yml@d9afae53e09ac73945d6053dcf12e9b1d2bb24aa # v1.1.0
+    with:
+      verify-arm64: true

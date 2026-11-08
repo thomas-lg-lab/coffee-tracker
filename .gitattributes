@@ -1,4 +1,5 @@
 * text=auto eol=lf
+*.sh text eol=lf
 
 # eol=lf above relies on Git's binary heuristic for these; say it outright so a
 # screenshot or icon can never be line-ending mangled.

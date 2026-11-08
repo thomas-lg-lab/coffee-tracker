@@ -1,0 +1,16 @@
+# The organisation's PR conventions: Conventional Commit title (required check `conventions / title`) and the
+# label it implies. Shared workflow of thomas-lg-lab/.github.
+name: Pull request
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions: {}
+
+jobs:
+  conventions:
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: thomas-lg-lab/.github/.github/workflows/pr-conventions.yml@d9afae53e09ac73945d6053dcf12e9b1d2bb24aa # v1.1.0
