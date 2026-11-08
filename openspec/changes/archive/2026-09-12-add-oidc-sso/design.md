@@ -2,7 +2,7 @@
 
 The app ships app-native auth from M3: ASP.NET Identity for the user store, a short-lived JWT signed by `TokenService`, a rotated refresh token, and an `IsAdmin` boolean carried as a claim. The Angular client holds that session in `AuthStore` and attaches the token in `auth.interceptor.ts`. Every downstream authorization decision — `Coffee.IsModifiableBy`, `Review.IsDeletableBy`, the `Admin` policy on `AdminPhotosController` — reads from that JWT.
 
-In the author's deployment the app sits behind SWAG + Authelia, so users log in twice. But the app is public and meant to be self-hostable by anyone, which rules out coupling it to a specific identity provider or making one mandatory.
+Behind a forward-auth gateway that is also an identity provider, users log in twice. But the app is public and meant to be self-hostable by anyone, which rules out coupling it to a specific identity provider or making one mandatory.
 
 Two facts about the existing code shape this design:
 
@@ -23,7 +23,7 @@ Two facts about the existing code shape this design:
 
 - Replacing the app's own JWT with provider tokens. The provider authenticates; the app keeps authorizing with its own short-lived token.
 - Multiple simultaneous providers, back-channel logout, provider-side user provisioning, or role mapping beyond `IsAdmin`.
-- Any Authelia-specific code path. Authelia is one valid provider among others and is named only in documentation.
+- Any provider-specific code path. Providers are named only in documentation, as examples.
 
 ## Decisions
 

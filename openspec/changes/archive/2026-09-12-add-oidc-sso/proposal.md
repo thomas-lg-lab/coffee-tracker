@@ -1,13 +1,13 @@
 ## Why
 
-The app is deployed behind Authelia, so users authenticate twice: once at the reverse proxy, then again against the app's own login form. M3 shipped app-native Identity and explicitly left "a future Authelia SSO (OIDC) path open"; this change takes it.
+Behind a forward-auth gateway, users authenticate twice: once at the reverse proxy, then again against the app's own login form. M3 shipped app-native Identity and explicitly left "a future OIDC SSO path open"; this change takes it.
 
-The constraint that shapes the design: **the app must stay usable by someone self-hosting it without any identity provider**. OIDC is therefore an optional, standards-based add-on — never Authelia-specific, never mandatory. Local accounts remain the default and the only thing an operator has to understand.
+The constraint that shapes the design: **the app must stay usable by someone self-hosting it without any identity provider**. OIDC is therefore an optional, standards-based add-on — never provider-specific, never mandatory. Local accounts remain the default and the only thing an operator has to understand.
 
 ## What Changes
 
 - **Optional OIDC login.** When an OIDC provider is configured, the client offers a "Sign in with <provider>" action using Authorization Code + PKCE. When it is not configured, nothing about the app changes and no OIDC affordance is shown.
-- **Provider-agnostic configuration.** Authority, client id, scopes and claim mappings come from configuration; the app discovers endpoints from the provider's `/.well-known/openid-configuration`. Nothing named "Authelia" appears in the code.
+- **Provider-agnostic configuration.** Authority, client id, scopes and claim mappings come from configuration; the app discovers endpoints from the provider's `/.well-known/openid-configuration`. No provider name appears in the code.
 - **Account linking on verified email.** An OIDC identity whose `email` matches an existing user is linked to that account **only when the token asserts `email_verified`**; otherwise the sign-in is refused rather than silently creating or hijacking an account. Linked identities are recorded in ASP.NET Identity's existing `AspNetUserLogins` table, so subsequent sign-ins match on the stable issuer + subject pair, not on the email.
 - **Admin from a configurable claim, with bootstrap fallback.** An operator maps a claim and value (e.g. `groups` contains `admins`) to `IsAdmin`. With no mapping configured, the first OIDC user to sign in bootstraps as admin, mirroring the existing local rule.
 - **Local-account policy, toggled from the admin view.** Two persisted settings govern whether app-created accounts may sign in and whether new ones may be registered. Both are stored in the database and editable by an admin at runtime.

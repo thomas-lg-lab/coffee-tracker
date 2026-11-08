@@ -61,10 +61,10 @@ endpoints require a valid token — reads (`GET`) included, not just writes. App
 `[Authorize]` at the `CoffeesController` level; only `register`/`login` are
 anonymous (and the dev-only Swagger/OpenAPI middleware).
 
-This is driven by the deployment: the app is internet-exposed via a SWAG reverse
-proxy with **Authelia** forward-auth in front. The app deliberately keeps its
-**own** login behind Authelia (defense-in-depth) rather than trusting the edge
-alone. A future option is to make the app's login **Authelia SSO (OIDC)** — the
+This is driven by the deployment: the app is meant to be internet-exposed behind a
+reverse proxy, possibly with a forward-auth gateway in front. The app deliberately keeps
+its **own** login behind such a gateway (defense-in-depth) rather than trusting the edge
+alone. A future option is to make the app's login **SSO through an OIDC provider** — the
 `IAuthService`/JWT-bearer boundary keeps that swap open, but M3 implements only
 native credentials.
 
