@@ -44,7 +44,10 @@ The e2e suite needs the API running on `:5000` against an **empty** database.
   `.github/workflows/pr-title-check.yml` enforces the type against
   `.github/conventional-commit-types.json`, so `fix(web): …` passes and `Fixed the
   thing` doesn't.
-- Say *why* in the description, not just what. The diff already says what.
+- Say *why* in the description, not just what. The diff already says what. The PR template
+  (the organisation's default) asks for it, and for how you tested.
+- If dependencies changed, commit the regenerated lockfiles (`package-lock.json`, NuGet
+  `packages.lock.json`).
 - Get CI green. It runs backend, frontend, e2e, the production Docker build, CodeQL and
   a Trivy image scan.
 - Changes are **squash-merged**, so don't worry about tidying your commit history.

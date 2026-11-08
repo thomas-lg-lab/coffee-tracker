@@ -1,7 +1,0 @@
-# Force every report through a template, a blank issue almost never carries the
-# version and reproduction steps needed to act on it.
-blank_issues_enabled: false
-contact_links:
-  - name: Security vulnerability
-    url: https://github.com/thomas-lg-lab/coffee-tracker/security/advisories/new
-    about: Report privately so a fix can ship before the details are public. Never open a public issue for these.
