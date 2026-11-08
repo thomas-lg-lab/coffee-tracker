@@ -27,25 +27,15 @@ docker pull ghcr.io/thomas-lg-lab/coffee-tracker:latest
 
 ## 2. Branch protection on `main` (applied)
 
-Configured via the API. Current ruleset:
+Two rulesets, kept as code in [`.github/rulesets/`](../.github/rulesets/) and applied with the
+organisation's `apply-standards.sh` (thomas-lg-lab/.github):
 
-- Pull request required before merge (**0** required approvals, solo maintainer).
-- Required status checks, **up to date**: `backend`, `frontend`, `docker-build`, `e2e`,
-  `Analyze (csharp)`, `Analyze (javascript-typescript)`. `e2e` matters more than its name
-  suggests, it runs the OpenAPI drift guard, so without it a backend contract change can
-  merge with a stale typed client.
-- **Linear history** (squash- or rebase-merge only, no merge commits).
-- Branch deletion **blocked**. Force-pushes are *allowed*, deliberately: rewriting `main`
-  is occasionally the only way to purge something that should never have been committed.
-- **Not enforced for admins** (the maintainer self-merges).
-
-View or edit at **Settings → Branches → Branch protection rules**, or via:
-
-```bash
-gh api repos/thomas-lg-lab/coffee-tracker/branches/main/protection   # if gh is installed
-```
-
-> Requires a public repo or GitHub Pro to stay enabled (this repo is public).
+- **Protect main**: pull request required (no approval, solo maintainer), squash only, linear
+  history, signed commits, no deletion or force push, no bypass. Required checks, **up to date**:
+  `conventions / title`, `backend`, `frontend`, `e2e`, `image / build`, plus CodeQL results
+  (default setup). `e2e` matters more than its name suggests, it runs the OpenAPI drift guard,
+  so without it a backend contract change can merge with a stale typed client.
+- **Code owner review**: a change under `.github/` needs the code owner's approval.
 
 ---
 

@@ -71,8 +71,10 @@ restating rather than explaining, and worth a second look.
 ## Commits & PRs
 
 - Feature branch → PR → CI green → **squash-merge**. `main` is protected.
-- PR titles follow **Conventional Commits**; `.github/workflows/pr-title-check.yml`
-  enforces it against `.github/conventional-commit-types.json`.
+- PR titles follow **Conventional Commits** (commitlint types, `!` for a breaking change),
+  enforced by the required `conventions / title` check (`pull-request.yml`).
+- The PR, release, image and registry workflows call the reusable workflows of
+  `thomas-lg-lab/.github` at a version tag: change them there, not here.
 - Issues and PR descriptions follow the organisation's defaults in `thomas-lg-lab/.github`
   (issue forms, PR template, and how to fill them in its README); they are not in this repository.
   An issue opened through the API or `gh` skips the forms: use the same sections and set the issue

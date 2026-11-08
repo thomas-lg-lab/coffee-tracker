@@ -148,7 +148,7 @@ try {
     else {
         Write-Host 'Refreshed:' -ForegroundColor Green
         $changed | ForEach-Object { Write-Host "  $_" -ForegroundColor Green }
-        Write-Host 'Commit these, e.g. git commit -am "deps: refresh packages.lock.json"'
+        Write-Host 'Commit these, e.g. git commit -am "chore(deps): refresh packages.lock.json"'
     }
 }
 finally {

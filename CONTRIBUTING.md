@@ -41,15 +41,15 @@ The e2e suite needs the API running on `:5000` against an **empty** database.
 
 - Branch off `main`; `main` itself takes no direct pushes.
 - **PR titles follow [Conventional Commits](https://www.conventionalcommits.org/)**;
-  `.github/workflows/pr-title-check.yml` enforces the type against
-  `.github/conventional-commit-types.json`, so `fix(web): …` passes and `Fixed the
-  thing` doesn't.
+  the `conventions / title` check enforces the
+  [commitlint types](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional),
+  so `fix(web): …` passes and `Fixed the thing` doesn't.
 - Say *why* in the description, not just what. The diff already says what. The PR template
   (the organisation's default) asks for it, and for how you tested.
 - If dependencies changed, commit the regenerated lockfiles (`package-lock.json`, NuGet
   `packages.lock.json`).
-- Get CI green. It runs backend, frontend, e2e, the production Docker build, CodeQL and
-  a Trivy image scan.
+- Get CI green. It runs backend, frontend, e2e, the production Docker build (amd64 and
+  arm64) with a Trivy image scan, and CodeQL.
 - Changes are **squash-merged**, so don't worry about tidying your commit history.
 
 ## Behaviour specs
@@ -60,4 +60,4 @@ overhead for what you're doing, it probably is. Ask in the issue and I'll tell y
 
 ## Code of conduct
 
-Be decent. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+Be decent. The organisation's [code of conduct](https://github.com/thomas-lg-lab/.github/blob/main/CODE_OF_CONDUCT.md) applies.

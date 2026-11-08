@@ -1,0 +1,23 @@
+# Weekly pruning of this repository's GHCR package (old sha-* tags, untagged layers). Shared workflow of
+# thomas-lg-lab/.github; its header states the retention contract.
+name: Registry cleanup
+
+on:
+  schedule:
+    - cron: "0 2 * * 0"
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Log what would be deleted, delete nothing
+        type: boolean
+        default: false
+
+permissions: {}
+
+jobs:
+  cleanup:
+    permissions:
+      packages: write
+    uses: thomas-lg-lab/.github/.github/workflows/registry-cleanup.yml@d9afae53e09ac73945d6053dcf12e9b1d2bb24aa # v1.1.0
+    with:
+      dry-run: ${{ inputs.dry-run == true }}
