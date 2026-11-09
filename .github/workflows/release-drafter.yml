@@ -1,6 +1,6 @@
-# Release notes: a push to main refreshes the draft release from the merged PRs' labels; a manual run publishes it,
-# which creates the `v*` tag and dispatches ci.yml on it to build the release image. Shared workflow and
-# configuration of thomas-lg-lab/.github.
+# Release notes: a push to main refreshes the draft release from the merged PRs' labels; a manual run publishes it
+# as the organisation's release App, whose tag push starts ci.yml on the release image. Shared workflow and
+# configuration of thomas-lg-lab/.github; the App's credentials are organisation secrets (secrets: inherit).
 name: Release Drafter
 
 on:
@@ -25,9 +25,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: read
-      actions: write
-    uses: thomas-lg-lab/.github/.github/workflows/release-drafter.yml@8622237a562b32f35b9da7ae7a9cb7c3ab08a0a9 # v1.5.0
+    secrets: inherit
+    uses: thomas-lg-lab/.github/.github/workflows/release-drafter.yml@21ff202fae4e0f07d7f18b710022abc2d5004f96 # v2.0.0
     with:
       publish: ${{ github.event_name == 'workflow_dispatch' }}
       dry-run: ${{ inputs.dry-run == true }}
-      image-workflow: ci.yml

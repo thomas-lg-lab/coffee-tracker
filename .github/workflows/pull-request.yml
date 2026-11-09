@@ -14,4 +14,4 @@ jobs:
       contents: read
       pull-requests: write
       security-events: write # zizmor's SARIF upload
-    uses: thomas-lg-lab/.github/.github/workflows/pr-conventions.yml@8622237a562b32f35b9da7ae7a9cb7c3ab08a0a9 # v1.5.0
+    uses: thomas-lg-lab/.github/.github/workflows/pr-conventions.yml@21ff202fae4e0f07d7f18b710022abc2d5004f96 # v2.0.0
