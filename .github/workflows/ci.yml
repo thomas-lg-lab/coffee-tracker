@@ -205,6 +205,6 @@ jobs:
       packages: write
       id-token: write
       attestations: write
-    uses: thomas-lg-lab/.github/.github/workflows/container-image.yml@1a212f82a6c43bfed9c959553cdfce37d75ad2fc # v1.2.0
+    uses: thomas-lg-lab/.github/.github/workflows/container-image.yml@85dd5f52209e73b88ba0a57ae7847a662072f9d1 # v1.4.0
     with:
       verify-arm64: true
