@@ -26,7 +26,7 @@ jobs:
       contents: write
       pull-requests: read
       actions: write
-    uses: thomas-lg-lab/.github/.github/workflows/release-drafter.yml@d9afae53e09ac73945d6053dcf12e9b1d2bb24aa # v1.1.0
+    uses: thomas-lg-lab/.github/.github/workflows/release-drafter.yml@1a212f82a6c43bfed9c959553cdfce37d75ad2fc # v1.2.0
     with:
       publish: ${{ github.event_name == 'workflow_dispatch' }}
       dry-run: ${{ inputs.dry-run == true }}

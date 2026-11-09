@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "Repository config on top of the shared preset github>thomas-lg-lab/renovate-config (schedule, dashboard, semantic commits, labels, squash, GitHub Actions groups). Translated from the former .github/dependabot.yml: same ecosystems, groups and ignores. No auto-merge: every update is reviewed before it reaches :edge.",
+  "description": "Repository config on top of the shared preset github>thomas-lg-lab/renovate-config (schedule, dashboard, semantic commits, labels, squash, GitHub Actions groups). No auto-merge: every update is reviewed before it reaches :edge.",
   "extends": [
     "github>thomas-lg-lab/renovate-config"
   ],
