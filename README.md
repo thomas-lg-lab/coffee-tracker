@@ -269,10 +269,10 @@ Found a security problem? Please report it privately rather than in an issue.
 [SECURITY.md](./SECURITY.md) has the details and says what's already known and
 deliberate.
 
-## Built with Claude
+## Built with AI
 
-I use [Claude](https://claude.ai) (via Claude Code) to help design and build this
-project.
+I use AI coding assistants to help design and build this project; the decisions, the
+reviews and the mistakes are mine.
 
 ## License
 

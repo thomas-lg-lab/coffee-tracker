@@ -18,6 +18,6 @@ jobs:
   cleanup:
     permissions:
       packages: write
-    uses: thomas-lg-lab/.github/.github/workflows/registry-cleanup.yml@85dd5f52209e73b88ba0a57ae7847a662072f9d1 # v1.4.0
+    uses: thomas-lg-lab/.github/.github/workflows/registry-cleanup.yml@8622237a562b32f35b9da7ae7a9cb7c3ab08a0a9 # v1.5.0
     with:
       dry-run: ${{ inputs.dry-run == true }}
