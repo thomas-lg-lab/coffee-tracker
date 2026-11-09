@@ -6,6 +6,7 @@ name: CI
 # release tag. Nothing is published that did not pass the checks of the same run.
 on:
   pull_request:
+    branches: [main]
   push:
     branches: [main]
     tags: ["v*"]
@@ -27,6 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
@@ -97,6 +100,8 @@ jobs:
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
@@ -129,6 +134,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
@@ -150,7 +157,7 @@ jobs:
       # anonymously (outside the global auth fallback policy), so no token is needed.
       - name: Wait for the API
         run: |
-          for i in $(seq 1 60); do
+          for _ in $(seq 1 60); do
             if curl -fsS http://localhost:5000/health >/dev/null 2>&1; then
               echo "API ready"; exit 0
             fi
@@ -198,6 +205,6 @@ jobs:
       packages: write
       id-token: write
       attestations: write
-    uses: thomas-lg-lab/.github/.github/workflows/container-image.yml@d9afae53e09ac73945d6053dcf12e9b1d2bb24aa # v1.1.0
+    uses: thomas-lg-lab/.github/.github/workflows/container-image.yml@1a212f82a6c43bfed9c959553cdfce37d75ad2fc # v1.2.0
     with:
       verify-arm64: true

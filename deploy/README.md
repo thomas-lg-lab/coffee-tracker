@@ -1,11 +1,13 @@
 # Deployment & operations runbook
 
-How Coffee Tracker ships and runs in production. The model is **GitHub Actions →
-GHCR (public image) → manual install via the Unraid Docker GUI**, no Watchtower,
-SSH, or compose-on-NAS. Images cover `linux/amd64` and `linux/arm64`.
+How an instance of Coffee Tracker is deployed and kept running. The model is **GitHub Actions →
+GHCR (public image) → the host pulls the image**; nothing pushes to the host. Images cover
+`linux/amd64` and `linux/arm64`.
 
-Canonical image: `ghcr.io/thomas-lg-lab/coffee-tracker` (tags: `latest`, `sha-<short>`,
-and `X.Y.Z`, without the `v`, on releases).
+Canonical image: `ghcr.io/thomas-lg-lab/coffee-tracker`. Tags: `latest` (last release), `X.Y.Z`,
+`X.Y` and `X` (releases, without the `v`), `edge` (every merge to `main`, for trying a change before
+a release) and `sha-<short>` (ephemeral: pruned after 30 days, never pin one). Pin a version or a
+digest for anything that must keep pulling.
 
 ---
 
