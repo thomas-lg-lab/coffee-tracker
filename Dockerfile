@@ -45,7 +45,7 @@ RUN npx ng build app --configuration production
 # fails --locked-mode with NU1004, because the committed lock files carry no runtime
 # identifiers. Emulating this stage would cost minutes per build for no difference in
 # output.
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0@sha256:212fe4cb74627d5adf9817a4088906ae3edff1bd853bb27565d4b46731efe61e AS api
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:11.0@sha256:2794448a07118a6eaf00f29ab5d2bf44928517ce5ff86505a63a69230374f599 AS api
 WORKDIR /src
 # Restore in its own layer (cached until a manifest or lock file changes), the same shape
 # as the npm restore in stage 1, otherwise every edit to any .cs file re-resolves and
@@ -66,7 +66,7 @@ RUN dotnet publish backend/CoffeeTracker.Api/CoffeeTracker.Api.csproj -c Release
 # mcr.microsoft.com/dotnet/aspnet:10.0
 # The only stage that follows the target platform, and the only one that needs to: the
 # apt packages below (tesseract, gosu, curl) are the image's native dependencies.
-FROM mcr.microsoft.com/dotnet/aspnet:10.0@sha256:1a48394b6f29d3a32c79d9edecd4abda0ecbe8776d567dbfc4590ed6979c740c AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:11.0@sha256:ca396ece3f2a2e62c7a03f1d7d710b8bc7e8c9dea5597d091178d9f5bfca13f0 AS runtime
 # Two OCR engines, both driven by shelling out and piping the image over stdin.
 #
 # RapidOCR (PP-OCR on onnxruntime) is the default, and it is what costs the size here:
