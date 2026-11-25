@@ -5,7 +5,7 @@
 # layered via the devcontainer Node feature + post-create.sh; this Dockerfile
 # only adds the OCR engines that features can't.
 # Fallback tag if 1-10.0 ever fails: 1-10.0-noble.
-FROM mcr.microsoft.com/devcontainers/dotnet:10.0
+FROM mcr.microsoft.com/devcontainers/dotnet:10.0@sha256:562e1995a4fc9879ee9d238554f8e5bfa1190d11c526987cb64555b5ada87d90
 
 # The base image ships a yarn apt source whose GPG signing key has rotated,
 # so `apt-get update` hard-fails on dl.yarnpkg.com ("NO_PUBKEY ... repository
