@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1@sha256:572cebbc2b15e6f84c077742952674889cb63cd5e9b80abdffcbe587b6f19183
 # Production image: build the Angular app, publish the API, and serve the SPA
 # same-origin from the API on :8080. Built for linux/amd64 and linux/arm64.
 
@@ -11,7 +11,7 @@
 # is frontend/package.json's engines (^20.19 || ^22.12 || ^24, i.e. Angular's supported
 # range) plus LTS status -- an even major is still "Current" until the October of its
 # release year. Renovate ignores node majors here; move all three references at once.
-FROM --platform=$BUILDPLATFORM node:24-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 AS web
+FROM --platform=$BUILDPLATFORM node:24-slim@sha256:873f586f3794f52281bd039bf02c048a0be08fde619338f9941bad1eb6b34530 AS web
 WORKDIR /web
 # Restore deps in their own layer (cached until a manifest changes). This is an npm
 # workspaces repo, so `npm ci` needs every member's package.json present up front;
@@ -45,7 +45,7 @@ RUN npx ng build app --configuration production
 # fails --locked-mode with NU1004, because the committed lock files carry no runtime
 # identifiers. Emulating this stage would cost minutes per build for no difference in
 # output.
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0@sha256:212fe4cb74627d5adf9817a4088906ae3edff1bd853bb27565d4b46731efe61e AS api
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d AS api
 WORKDIR /src
 # Restore in its own layer (cached until a manifest or lock file changes), the same shape
 # as the npm restore in stage 1, otherwise every edit to any .cs file re-resolves and
@@ -66,7 +66,7 @@ RUN dotnet publish backend/CoffeeTracker.Api/CoffeeTracker.Api.csproj -c Release
 # mcr.microsoft.com/dotnet/aspnet:10.0
 # The only stage that follows the target platform, and the only one that needs to: the
 # apt packages below (tesseract, gosu, curl) are the image's native dependencies.
-FROM mcr.microsoft.com/dotnet/aspnet:10.0@sha256:1a48394b6f29d3a32c79d9edecd4abda0ecbe8776d567dbfc4590ed6979c740c AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21 AS runtime
 # Two OCR engines, both driven by shelling out and piping the image over stdin.
 #
 # RapidOCR (PP-OCR on onnxruntime) is the default, and it is what costs the size here:
