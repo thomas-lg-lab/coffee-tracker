@@ -7,7 +7,7 @@
   "features": {
     // Node 24 (LTS) + npm, layered on top of the .NET 10 SDK base image. Keep the
     // version in step with the Dockerfile and ci.yml.
-    "ghcr.io/devcontainers/features/node:2": { "version": "24" },
+    "ghcr.io/devcontainers/features/node:2": { "version": "26.13.1" },
     // Claude Code CLI (npm-based, so it needs the Node feature above).
     "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
     // GitHub CLI (`gh`). Auth comes from the GH_TOKEN env var below, gh picks it
